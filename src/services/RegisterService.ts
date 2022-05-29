@@ -32,11 +32,25 @@ export class RegisterService {
             let loggedInUser;
             await axios.post(`http://localhost:4000/user/userlogin`, user).then(res => {loggedInUser = res.data});
             
+
             return loggedInUser;
             
         } catch (err) {
             console.log("Fel lösen!");
-            return false;
+            return;
         }   
+    }
+
+    async editSubStatus(user: any) {
+        try {
+            axios.put(`http://localhost:4000/user`, user)
+        } catch(err) {
+            console.log(err)
+        }
+    }
+
+    saveToLs (user: string) {
+        localStorage.clear();
+        localStorage.setItem("activeUser", user)
     }
 }

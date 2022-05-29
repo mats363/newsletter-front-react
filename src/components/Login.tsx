@@ -8,30 +8,36 @@ export function Login () {
 
     const [checked, setChecked] = useState<boolean>(false);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [loggedInUser, setLoggedInUser] = useState<IUser>()
+    const [loggedInUser, setLoggedInUser] = useState({
+      name: "",
+      email: "",
+      password: "",
+      subStatus: false
+    })
 
     const [userToLogin, setUserToLogin] = useState({
         email: "",
         password: ""
     });
 
-    const [hasSubscription, setHasSubscription] = useState<boolean>();
-
 
     async function login(e: FormEvent<HTMLFormElement> ) {
         e.preventDefault();
         let userTest = await service.login(userToLogin);
+        
         if (userTest) {
+          service.saveToLs(loggedInUser.name)
           console.log(userTest)
           setLoggedInUser(userTest);
+          
+          console.log(loggedInUser)
           setIsLoggedIn(true);
-          console.log(isLoggedIn)
-          console.log(loggedInUser?.name)
+         
       
         } else {
           console.log("Inte inloggad")
         }  
-        console.log(loggedInUser?.subStatus)
+        
     }
    
     function handleChange(e: ChangeEvent<HTMLInputElement>) {
@@ -46,9 +52,13 @@ export function Login () {
 
     function logOut() {
       setIsLoggedIn(false);
+      localStorage.clear();
     }
       
-    
+    async function submitChange() {
+      loggedInUser.subStatus = checked;
+      await service.editUser(loggedInUser)
+    }
 
     return (<>
    
@@ -66,17 +76,20 @@ export function Login () {
     </div>)}
 
     {isLoggedIn && (
-      <div>
+      <section>
         <h1>Välkommen {loggedInUser?.name}!</h1>
         <h5>Här kan du ändra din prenumerationsstatus:</h5>
-        <p> {loggedInUser?.subStatus}</p>
-        <label> JA! Jag vill prenumerera på nyhetsbrevet!
+        
+        <label> JA! Jag vill ändra min prenumeration på nyhetsbrevet!
+         
         <input type="checkbox" name="subStatus" checked={checked} onChange={handleCheckBox}/>
         </label>
         <div>
+          <button onClick={submitChange}>Spara ändringar</button>
           <button onClick={logOut}>Logga ut</button>
         </div>
-      </div>
+         
+      </section>
       
     )}
 
