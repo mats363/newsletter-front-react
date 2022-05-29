@@ -6,7 +6,7 @@ import { RegisterService } from './services/RegisterService';
 import { Link } from 'react-router-dom';
 import { Login } from './components/Login';
 
-
+// Används för att registrera användare
 
 function App() {
 let service = new RegisterService;
