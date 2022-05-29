@@ -34,6 +34,8 @@ function register (e: FormEvent<HTMLFormElement>) {
   newUser.subStatus = checked;
   console.log("register function " + checked)
   service.createNewUser(newUser)
+  setNewUser({name: "", email: "", password:"", subStatus:false});
+  alert("Du har skapat ett konto")
   
 }
 
