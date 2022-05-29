@@ -29,10 +29,14 @@ export class RegisterService {
 
     async login(user: any) {
         try {
-            let userCheck = await axios.get<IUser>(`http://localhost:4000/user/userlogin/${user}'`);
-            return userCheck;
+            let loggedInUser;
+            await axios.post(`http://localhost:4000/user/userlogin`, user).then(res => {loggedInUser = res.data});
+            
+            return loggedInUser;
+            
         } catch (err) {
-            console.log(err);
-        }
+            console.log("Fel lösen!");
+            return false;
+        }   
     }
 }
