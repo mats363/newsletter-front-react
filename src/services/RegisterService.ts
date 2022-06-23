@@ -29,11 +29,13 @@ export class RegisterService {
 
     async login(user: any) {
         try {
-            let loggedInUser;
-            await axios.post(`http://localhost:4000/user/userlogin`, user).then(res => {loggedInUser = res.data});
+            let loggedInUser: IUser;
+            await axios.post(`http://localhost:4000/user/userlogin`, user)
+            .then(res => {loggedInUser = res.data})
+            
             
 
-            return loggedInUser;
+           //return loggedInUser;
             
         } catch (err) {
             console.log("Fel lösen!");

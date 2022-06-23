@@ -1,12 +1,13 @@
-import { ChangeEvent, FormEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { isBooleanObject } from "util/types";
 import { RegisterService } from "../services/RegisterService";
 import {IUser} from "../models/IUser"
+import axios from "axios";
 
 export function Login () {
     let service = new RegisterService;
 
-    const [checked, setChecked] = useState<boolean>(false);
+    const [checked, setChecked] = useState(false);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [loggedInUser, setLoggedInUser] = useState({
       name: "",
@@ -20,23 +21,49 @@ export function Login () {
         password: ""
     });
 
+    useEffect(()=> {
+      let loginCheck = localStorage.getItem("activeUser");
+      if (!loginCheck){
+        setIsLoggedIn(false)
+      } else {
+        setIsLoggedIn(true)
+      }
+
+
+    }, [])
 
     async function login(e: FormEvent<HTMLFormElement> ) {
         e.preventDefault();
-        let userTest = await service.login(userToLogin);
-        
-        if (userTest) {
-          service.saveToLs(loggedInUser.name)
-          console.log(userTest)
-          setLoggedInUser(userTest);
+        try {
+          let userTest;
+          await axios.post(`http://localhost:4000/user/userlogin`, userToLogin)
+          .then(res => {localStorage.setItem("activeUser", JSON.stringify(res.data.name))})
           
-          console.log(loggedInUser)
+          
           setIsLoggedIn(true);
+          
+
+        } catch (err){
+          console.log(err)
+          setIsLoggedIn(false);
+        }
+
+        //let userTest = await service.login(userToLogin);
+        //console.log("usertest " + userTest)
+        
+        // if (userTest) {
+        //   setIsLoggedIn(true);
+          
+          
+        //   setLoggedInUser(userTest);
+        //   localStorage.setItem("activeUser", loggedInUser.name)
+        //   console.log(loggedInUser)
+          
          
       
-        } else {
-          console.log("Inte inloggad")
-        }  
+        // } else {
+        //   console.log("Inte inloggad")
+        // }  
         
     }
    
