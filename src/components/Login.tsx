@@ -1,16 +1,15 @@
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { RegisterService } from "../services/RegisterService";
 import axios from "axios";
+import { Settings } from "./Settings";
+import { User } from "../models/User";
 
 export function Login () {
     let service = new RegisterService;
 
     const [checked, setChecked] = useState(true);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [loggedInUser, setLoggedInUser] = useState({
-      name: "",
-      subStatus: checked
-    })
+    const [loggedInUser, setLoggedInUser] = useState<User>({_id: "", name:"", subStatus: false})
 
     const [userToLogin, setUserToLogin] = useState({
         email: "",
@@ -21,7 +20,7 @@ export function Login () {
 
     const [message, setMessage] = useState("");
 
-
+// Kollar mot LocalStorage om användaren är inloggad
     useEffect(()=> {
       let loginCheck = localStorage.getItem("activeUser");
       if (!loginCheck){
@@ -30,41 +29,40 @@ export function Login () {
         setIsLoggedIn(true)
         setLoggedInUser(JSON.parse(loginCheck))
       }
-
-
     }, [])
 
     useEffect(() => {
-      if (loggedInUser.subStatus) {
-        setChecked(true)
-      } else {setChecked(false)}
-      console.log(checked + " checked")
+      if (loggedInUser){
+        if (loggedInUser.subStatus) {
+          setChecked(true)
+        } else {setChecked(false)}
+        console.log(checked + " checked")
+      }
+     
       
-    }, [])
-
-
-    useEffect(()=> {
-      console.log("i useeffect " + loggedInUser.subStatus)
     }, [])
 
     async function login(e: FormEvent<HTMLFormElement> ) {
         e.preventDefault();
-        let userTest = {name: "", subStatus: false }
+        let userTest: User = new User("", "", false)
         try {
           await axios.post(`http://localhost:4000/user/userlogin`, userToLogin)
-          .then(res => {userTest = res.data})
-          
+          .then(res => {
+            userTest._id = res.data._id;
+            userTest.name = res.data.name;
+            userTest.subStatus = res.data.subStatus
+          })
           setIsLoggedIn(true)
           setLoggedInUser(userTest)
           
           
         } catch (err){
           alert("Wrong password or username");
-          setUserToLogin({email: "", password: ""});
+          // setUserToLogin({email: "", password: ""});
           setIsLoggedIn(false);
         }
 
-        localStorage.setItem("activeUser", JSON.stringify(userTest.name));
+        localStorage.setItem("activeUser", JSON.stringify(userTest));
         
     }
     
@@ -74,25 +72,21 @@ export function Login () {
         setUserToLogin({...userToLogin, [user]: e.target.value });
       }
     
-    function handleCheckBox() {
-      setChecked(!checked);
-      console.log(checked + " checked")
-      console.log(loggedInUser.subStatus)
-      
-    }
 
-    function logOut() {
-      setIsLoggedIn(false);
-      localStorage.clear();
-    }
+   
       
     async function submitChange() {
-      loggedInUser.subStatus = checked;
+      if (loggedInUser) {
+        loggedInUser.subStatus = checked;
       await service.editUser(loggedInUser)
       console.log(loggedInUser)
+      }
+      
     }
 
-    let subStatusMsg = "";
+    function submit() {
+      console.log(loggedInUser)
+    }
 
   
 
@@ -113,19 +107,7 @@ export function Login () {
 
     {isLoggedIn && (
       <section>
-        <h1>Välkommen {loggedInUser.name}!</h1>
-        <h3> {subStatusMsg} </h3>
-        <h5>Här kan du ändra din prenumerationsstatus:</h5>
-        
-        <label> JA! Jag vill ändra min prenumeration på nyhetsbrevet!
-         
-        <input type="checkbox" name="subStatus" checked={checked} onChange={handleCheckBox}/>
-        </label>
-        <div>
-          <button onClick={submitChange}>Spara ändringar</button>
-          <button onClick={logOut}>Logga ut</button>
-        </div>
-         
+      <Settings user={loggedInUser}></Settings>
       </section>
       
     )}
