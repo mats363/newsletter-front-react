@@ -1,19 +1,15 @@
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
-import { isBooleanObject } from "util/types";
 import { RegisterService } from "../services/RegisterService";
-import {IUser} from "../models/IUser"
 import axios from "axios";
 
 export function Login () {
     let service = new RegisterService;
 
-    const [checked, setChecked] = useState(false);
+    const [checked, setChecked] = useState(true);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [loggedInUser, setLoggedInUser] = useState({
       name: "",
-      email: "",
-      password: "",
-      subStatus: false
+      subStatus: checked
     })
 
     const [userToLogin, setUserToLogin] = useState({
@@ -21,52 +17,58 @@ export function Login () {
         password: ""
     });
 
+    const [isSubscribing, setIsSubscribing] = useState();
+
+    const [message, setMessage] = useState("");
+
+
     useEffect(()=> {
       let loginCheck = localStorage.getItem("activeUser");
       if (!loginCheck){
         setIsLoggedIn(false)
       } else {
         setIsLoggedIn(true)
+        setLoggedInUser(JSON.parse(loginCheck))
       }
 
 
     }, [])
 
+    useEffect(() => {
+      if (loggedInUser.subStatus) {
+        setChecked(true)
+      } else {setChecked(false)}
+      console.log(checked + " checked")
+      
+    }, [])
+
+
+    useEffect(()=> {
+      console.log("i useeffect " + loggedInUser.subStatus)
+    }, [])
+
     async function login(e: FormEvent<HTMLFormElement> ) {
         e.preventDefault();
+        let userTest = {name: "", subStatus: false }
         try {
-          let userTest;
           await axios.post(`http://localhost:4000/user/userlogin`, userToLogin)
-          .then(res => {localStorage.setItem("activeUser", JSON.stringify(res.data.name))})
+          .then(res => {userTest = res.data})
+          
+          setIsLoggedIn(true)
+          setLoggedInUser(userTest)
           
           
-          setIsLoggedIn(true);
-          
-
         } catch (err){
-          console.log(err)
+          alert("Wrong password or username");
+          setUserToLogin({email: "", password: ""});
           setIsLoggedIn(false);
         }
 
-        //let userTest = await service.login(userToLogin);
-        //console.log("usertest " + userTest)
-        
-        // if (userTest) {
-        //   setIsLoggedIn(true);
-          
-          
-        //   setLoggedInUser(userTest);
-        //   localStorage.setItem("activeUser", loggedInUser.name)
-        //   console.log(loggedInUser)
-          
-         
-      
-        // } else {
-        //   console.log("Inte inloggad")
-        // }  
+        localStorage.setItem("activeUser", JSON.stringify(userTest.name));
         
     }
-   
+    
+
     function handleChange(e: ChangeEvent<HTMLInputElement>) {
         let user: string = e.target.name;
         setUserToLogin({...userToLogin, [user]: e.target.value });
@@ -74,6 +76,8 @@ export function Login () {
     
     function handleCheckBox() {
       setChecked(!checked);
+      console.log(checked + " checked")
+      console.log(loggedInUser.subStatus)
       
     }
 
@@ -85,7 +89,12 @@ export function Login () {
     async function submitChange() {
       loggedInUser.subStatus = checked;
       await service.editUser(loggedInUser)
+      console.log(loggedInUser)
     }
+
+    let subStatusMsg = "";
+
+  
 
     return (<>
    
@@ -104,7 +113,8 @@ export function Login () {
 
     {isLoggedIn && (
       <section>
-        <h1>Välkommen {loggedInUser?.name}!</h1>
+        <h1>Välkommen {loggedInUser.name}!</h1>
+        <h3> {subStatusMsg} </h3>
         <h5>Här kan du ändra din prenumerationsstatus:</h5>
         
         <label> JA! Jag vill ändra min prenumeration på nyhetsbrevet!

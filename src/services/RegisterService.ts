@@ -13,7 +13,7 @@ export class RegisterService {
                     
     }
 
-    async editUser(user: IUser) {
+    async editUser(user: any) {
         let response = await axios.put<IUser>('http://localhost:4000/user', user)
     }
 
