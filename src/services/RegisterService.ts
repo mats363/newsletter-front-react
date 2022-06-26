@@ -27,6 +27,16 @@ export class RegisterService {
          
     }
 
+    async fetchUser(userId: string) {
+        try {
+            let fetchedUser = await axios.get(`http://localhost:4000/user/${userId}`)
+            console.log(fetchedUser.data)
+        } catch(err) {
+            console.log(err)
+        }
+        
+    }
+
     async login(user: any) {
         try {
             let loggedInUser: IUser;

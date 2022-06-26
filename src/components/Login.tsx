@@ -3,6 +3,7 @@ import { RegisterService } from "../services/RegisterService";
 import axios from "axios";
 import { Settings } from "./Settings";
 import { User } from "../models/User";
+import { Link } from "react-router-dom";
 
 export function Login () {
     let service = new RegisterService;
@@ -15,10 +16,6 @@ export function Login () {
         email: "",
         password: ""
     });
-
-    const [isSubscribing, setIsSubscribing] = useState();
-
-    const [message, setMessage] = useState("");
 
 // Kollar mot LocalStorage om användaren är inloggad
     useEffect(()=> {
@@ -73,23 +70,7 @@ export function Login () {
       }
     
 
-   
-      
-    async function submitChange() {
-      if (loggedInUser) {
-        loggedInUser.subStatus = checked;
-      await service.editUser(loggedInUser)
-      console.log(loggedInUser)
-      }
-      
-    }
-
-    function submit() {
-      console.log(loggedInUser)
-    }
-
   
-
     return (<>
    
     <h1>KÖPGAMMALTSKROT.SE</h1>
@@ -101,7 +82,7 @@ export function Login () {
       <input required type="password" name="password" placeholder="password" value={userToLogin.password} onChange={handleChange}/>
       <input type="submit"/>
     </form>
-    
+    <Link to="/">Skapa nytt konto</Link>
     
     </div>)}
 

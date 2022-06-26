@@ -1,7 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { User } from "../models/User"
-import { RegisterService } from "../services/RegisterService";
 
 interface IChildComponentProps {
     user: User
@@ -13,6 +12,10 @@ interface UserUpdate {
     subStatus: boolean
 }
 
+interface fUser {
+    subStatus: boolean
+}
+
 export function Settings(props: IChildComponentProps) {
 
     const [isLoggedIn, setIsLoggedIn] = useState(false)
@@ -21,54 +24,41 @@ export function Settings(props: IChildComponentProps) {
         _id: "",
         name: "",
         subStatus: true
-    })
-
-    const service = new RegisterService;
-
-    function logOut() {
-        setIsLoggedIn(false);
-        localStorage.clear();
-        window.location.reload()       
-      }
-    
-    useEffect(() => {
-        //setLoggedInUser(props.user)
-    })
+    });
+    const [response, setResponse] = useState<fUser>();
 
     useEffect(() => {
-        if (props.user.subStatus) {
+        if (props.user.subStatus === true) {
             setIsSub(true);
+        } else if (props.user.subStatus === false){
+            setIsSub(false);
         }
-    }, )  
+    }, [] )  
+
+    useEffect(() => {
+        axios.get(`http://localhost:4000/user/${props.user._id}`)
+            .then(res => {setIsSub(res.data)})
+
+    }, [])
 
     async function unSubscribe(e: any) {
         e.preventDefault();
-        let userToUpdate: User = new User(props.user._id, props.user.name, false)
-       // loggedInUser.subStatus = false;
-        
+       let userToUpdate: User = new User(props.user._id, props.user.name, false)
+ 
         try {
-           // loggedInUser.subStatus = false;
             axios.patch(`http://localhost:4000/user`, userToUpdate)
             .then(res => {console.log(res)})
             setIsSub(false);
         } catch(err) {
             console.log(err)
         }
-        // await service.editUser(loggedInUser)
-        // console.log(loggedInUser)
-        // }
-        //console.log(loggedInUser)
-
-        
       }
 
     async function subscribe(e: any) {
         e.preventDefault();
         let userToUpdate: User = new User(props.user._id, props.user.name, true)
-       // loggedInUser.subStatus = false;
         
         try {
-            //loggedInUser.subStatus = false;
             axios.patch(`http://localhost:4000/user`, userToUpdate)
             .then(res => {console.log(res)})
             setIsSub(true);
@@ -76,6 +66,12 @@ export function Settings(props: IChildComponentProps) {
             console.log(err)
         }
     }
+    
+    function logOut() {
+        setIsLoggedIn(false);
+        localStorage.clear();
+        window.location.reload()       
+      }
 
     return (<>
         {isSub && (
