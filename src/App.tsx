@@ -1,10 +1,7 @@
 import React, { ChangeEvent, FormEvent, useState } from 'react';
-import logo from './logo.svg';
 import './App.css';
-import { IUser } from './models/IUser';
 import { RegisterService } from './services/RegisterService';
 import { Link } from 'react-router-dom';
-import { Login } from './components/Login';
 
 // Används för att registrera användare
 
