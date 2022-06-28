@@ -1,7 +1,7 @@
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { RegisterService } from "../services/RegisterService";
 import axios from "axios";
-import { Settings } from "./Settings";
+import { Dashboard } from "./Dashboard";
 import { User } from "../models/User";
 import { Link } from "react-router-dom";
 
@@ -55,15 +55,12 @@ export function Login () {
           
         } catch (err){
           alert("Wrong password or username");
-          // setUserToLogin({email: "", password: ""});
           setIsLoggedIn(false);
         }
 
-        localStorage.setItem("activeUser", JSON.stringify(userTest));
-        
+        localStorage.setItem("activeUser", JSON.stringify(userTest));   
     }
     
-
     function handleChange(e: ChangeEvent<HTMLInputElement>) {
         let user: string = e.target.name;
         setUserToLogin({...userToLogin, [user]: e.target.value });
@@ -76,19 +73,23 @@ export function Login () {
     <h1>KÖPGAMMALTSKROT.SE</h1>
 
     {!isLoggedIn && (
-    <div>
-    <form onSubmit={login}>
+      <section>
+    <div className="flex items-center justify-between">
+    <form className="flex-col text-end" onSubmit={login}>
       <input required type="email" name="email" placeholder="email" value={userToLogin.email} onChange={handleChange}/>
       <input required type="password" name="password" placeholder="password" value={userToLogin.password} onChange={handleChange}/>
       <input type="submit"/>
     </form>
-    <Link to="/">Skapa nytt konto</Link>
+    <Link to="/">Skapa ett nytt konto</Link>
     
-    </div>)}
+    </div>
+
+    
+    </section>)}
 
     {isLoggedIn && (
       <section>
-      <Settings user={loggedInUser}></Settings>
+      <Dashboard user={loggedInUser}></Dashboard>
       </section>
       
     )}

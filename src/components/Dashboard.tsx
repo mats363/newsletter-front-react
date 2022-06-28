@@ -16,7 +16,7 @@ interface fUser {
     subStatus: boolean
 }
 
-export function Settings(props: IChildComponentProps) {
+export function Dashboard(props: IChildComponentProps) {
 
     const [isLoggedIn, setIsLoggedIn] = useState(false)
     const [isSub, setIsSub] = useState(false);
@@ -75,7 +75,7 @@ export function Settings(props: IChildComponentProps) {
 
     return (<>
         {isSub && (
-            <button onClick={unSubscribe}>Avregistrera mig från nyhetsbrevet</button>
+            <button className="hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" onClick={unSubscribe}>Avregistrera mig från nyhetsbrevet</button>
         )}
         {!isSub && (
             <button onClick={subscribe}>Ge mig en prenumeration på nyhetsbrevet!</button>

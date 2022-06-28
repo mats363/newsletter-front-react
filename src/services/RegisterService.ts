@@ -17,15 +17,15 @@ export class RegisterService {
         let response = await axios.put<IUser>('http://localhost:4000/user', user)
     }
 
-    async fetchUsers(users: IUser[]) {
+    // async fetchUsers(users: IUser[]) {
         
-        try {
-            axios.get<IUser[]>('http://localhost:4000/user') 
-        } catch(err) {
-            console.log(err)
-        }
+    //     try {
+    //         axios.get<IUser[]>('http://localhost:4000/user') 
+    //     } catch(err) {
+    //         console.log(err)
+    //     }
          
-    }
+    // }
 
     async fetchUser(userId: string) {
         try {
@@ -42,10 +42,6 @@ export class RegisterService {
             let loggedInUser: IUser;
             await axios.post(`http://localhost:4000/user/userlogin`, user)
             .then(res => {loggedInUser = res.data})
-            
-            
-
-           //return loggedInUser;
             
         } catch (err) {
             console.log("Fel lösen!");
