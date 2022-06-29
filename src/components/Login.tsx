@@ -1,14 +1,11 @@
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
-import { RegisterService } from "../services/RegisterService";
 import axios from "axios";
 import { Dashboard } from "./Dashboard";
 import { User } from "../models/User";
 import { Link } from "react-router-dom";
 
 export function Login () {
-    let service = new RegisterService;
-
-    const [checked, setChecked] = useState(true);
+   
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [loggedInUser, setLoggedInUser] = useState<User>({_id: "", name:"", subStatus: false})
 
@@ -26,19 +23,10 @@ export function Login () {
         setIsLoggedIn(true)
         setLoggedInUser(JSON.parse(loginCheck))
       }
-    }, [])
-
-    useEffect(() => {
-      if (loggedInUser){
-        if (loggedInUser.subStatus) {
-          setChecked(true)
-        } else {setChecked(false)}
-        console.log(checked + " checked")
-      }
-     
       
     }, [])
 
+   
     async function login(e: FormEvent<HTMLFormElement> ) {
         e.preventDefault();
         let userTest: User = new User("", "", false)

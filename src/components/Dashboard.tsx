@@ -12,9 +12,6 @@ interface UserUpdate {
     subStatus: boolean
 }
 
-interface fUser {
-    subStatus: boolean
-}
 
 export function Dashboard(props: IChildComponentProps) {
 
@@ -25,7 +22,6 @@ export function Dashboard(props: IChildComponentProps) {
         name: "",
         subStatus: true
     });
-    const [response, setResponse] = useState<fUser>();
 
     useEffect(() => {
         if (props.user.subStatus === true) {
@@ -68,8 +64,9 @@ export function Dashboard(props: IChildComponentProps) {
     }
     
     function logOut() {
-        setIsLoggedIn(false);
         localStorage.clear();
+        setIsLoggedIn(false);
+        console.log(isLoggedIn)
         window.location.reload()       
       }
 
