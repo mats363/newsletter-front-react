@@ -1,7 +1,7 @@
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { RegisterService } from "../services/RegisterService";
 import axios from "axios";
-import { Settings } from "./Settings";
+import { Dashboard } from "./Dashboard";
 import { User } from "../models/User";
 import { Link } from "react-router-dom";
 
@@ -55,15 +55,12 @@ export function Login () {
           
         } catch (err){
           alert("Wrong password or username");
-          // setUserToLogin({email: "", password: ""});
           setIsLoggedIn(false);
         }
 
-        localStorage.setItem("activeUser", JSON.stringify(userTest));
-        
+        localStorage.setItem("activeUser", JSON.stringify(userTest));   
     }
     
-
     function handleChange(e: ChangeEvent<HTMLInputElement>) {
         let user: string = e.target.name;
         setUserToLogin({...userToLogin, [user]: e.target.value });
@@ -73,22 +70,46 @@ export function Login () {
   
     return (<>
    
-    <h1>KÖPGAMMALTSKROT.SE</h1>
+    {/* <h1 className="text-red">KÖPGAMMALTSKROT.SE</h1> */}
 
     {!isLoggedIn && (
-    <div>
-    <form onSubmit={login}>
-      <input required type="email" name="email" placeholder="email" value={userToLogin.email} onChange={handleChange}/>
-      <input required type="password" name="password" placeholder="password" value={userToLogin.password} onChange={handleChange}/>
-      <input type="submit"/>
+    <section className="w-full h-screen flex justify-center items-center bg-wall bg-cover">
+    <div className="w-full max-w-xs justify-center">
+    <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" onSubmit={login}>
+      <div className="mb-4">
+        <h4 className="text-3xl font-bold text-red-600">
+          Login
+        </h4>
+      </div>  
+      <div className="mb-4">
+      <label className="block text-gray-700 text-sm font-bold mb-2">Email 
+        <br/>
+          <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required type="email" name="email" placeholder="email" value={userToLogin.email} onChange={handleChange}/>
+      </label>
+      </div>
+      <div className="mb-10">
+
+      <label className="block text-gray-700 text-sm font-bold mb-2">Password 
+        <br/>
+          <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required type="password" name="password" placeholder="password" value={userToLogin.password} onChange={handleChange}/>
+       
+      </label>
+      </div>
+      <input className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit" value="Sign in"/>
+      
+      <Link to="/"><button className="bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Create account</button></Link>
     </form>
-    <Link to="/">Skapa nytt konto</Link>
     
-    </div>)}
+    
+    </div>
+
+    
+    </section>
+    )}
 
     {isLoggedIn && (
       <section>
-      <Settings user={loggedInUser}></Settings>
+      <Dashboard user={loggedInUser}></Dashboard>
       </section>
       
     )}
