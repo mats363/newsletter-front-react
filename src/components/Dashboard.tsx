@@ -6,26 +6,10 @@ interface IChildComponentProps {
     user: User
 }
 
-interface UserUpdate {
-    _id: string,
-    name: string,
-    subStatus: boolean
-}
-
-interface fUser {
-    subStatus: boolean
-}
-
 export function Dashboard(props: IChildComponentProps) {
 
     const [isLoggedIn, setIsLoggedIn] = useState(false)
     const [isSub, setIsSub] = useState(false);
-    const [loggedInUser, setLoggedInUser] = useState<UserUpdate>({
-        _id: "",
-        name: "",
-        subStatus: true
-    });
-    const [response, setResponse] = useState<fUser>();
 
     useEffect(() => {
         if (props.user.subStatus === true) {
@@ -34,6 +18,8 @@ export function Dashboard(props: IChildComponentProps) {
             setIsSub(false);
         }
     }, [] )  
+
+    // Hämtar och uppdaterar prenumerationsstatus
 
     useEffect(() => {
         axios.get(`http://localhost:4000/user/${props.user._id}`)
@@ -68,8 +54,9 @@ export function Dashboard(props: IChildComponentProps) {
     }
     
     function logOut() {
-        setIsLoggedIn(false);
         localStorage.clear();
+        setIsLoggedIn(false);
+        console.log(isLoggedIn)
         window.location.reload()       
       }
 
