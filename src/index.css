@@ -5,13 +5,14 @@
 @tailwind utilities;
 
 @layer base {
-  /* h1 {
+  h1 {
     @apply text-2xl;
   }
   h2 {
     @apply text-xl;
   }
-  input {
+  
+  /* input {
     @apply shadow appearance-none border rounded w-1/5 py-2 px-3 text-gray-700 leading-tight;
   } */
 }

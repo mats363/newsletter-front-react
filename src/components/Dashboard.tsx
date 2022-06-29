@@ -74,14 +74,29 @@ export function Dashboard(props: IChildComponentProps) {
       }
 
     return (<>
-        {isSub && (
-            <button className="hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" onClick={unSubscribe}>Avregistrera mig från nyhetsbrevet</button>
-        )}
-        {!isSub && (
-            <button onClick={subscribe}>Ge mig en prenumeration på nyhetsbrevet!</button>
-        )}
+     <header className="absolute w-full">
+        <nav className="flex justify-between m-4">
+            <h1 className="font-mono">the company.</h1>
+            <button className="text-xs bg-gray-200 hover:bg-gray-300 text-black font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" onClick={logOut}>LOG OUT</button>
+        </nav>
+    </header>
 
+    <section className="w-full h-screen flex justify-center items-center bg-wall bg-cover">
+        
+        <div className="w-full max-w-xs justify-center">
+            <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+                <h2 className="mb-4">Welcome {props.user.name}!</h2>
+                <span className="block text-gray-700 text-sm font-bold mb-6">Here you can view and change your subscription status</span>
+                {isSub && (
+                    <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" onClick={unSubscribe}>Don't send me the newsletter</button>
+                )}
+                {!isSub && (
+            <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" onClick={subscribe}>Give me a subscription to the newsletter!</button>
+        )}
+            </div>
+        </div>
 
-        <button onClick={logOut}>Logga ut</button>
+       
+        </section>
     </>)
 }
