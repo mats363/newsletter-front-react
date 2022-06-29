@@ -1,6 +1,5 @@
 import React, { ChangeEvent, FormEvent, useState } from 'react';
 import './App.css';
-import { RegisterService } from './services/RegisterService';
 import { Link, Navigate } from 'react-router-dom';
 
 // Används för att registrera användare
